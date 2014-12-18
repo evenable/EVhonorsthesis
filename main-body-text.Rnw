@@ -1,0 +1,126 @@
+% !TEX root = snp-contam-main.Rnw
+
+\section*{Introduction}
+
+Single nucleotide polymorphisms (SNPs) have emerged as an important genetic marker, and their use is becoming widespread in molecular ecology.  The low cost of SNP genotyping makes it a practical alternative to microsatellite genotyping \citep{Anderson&Garza2006}.  SNP genotyping codes are also independent of the genotyping system, allowing for easy standardization across laboratories \citep{Morinetal2004}.  In addition, SNPs are present in large amounts in many species' genotypes \citep{Morinetal2004}, specific SNP loci under diversifying selection can be divergent between populations \citep{Freamoetal2011, Karlssonetal2011}, and SNP genotyping can be used on short fragments, providing low genotyping failure and error rates in historical or low-quality samples \citep{Morin&McCarthy2007, Smithetal2011}.  Studies have also shown that SNPs are comparable or better than microsatellites in most applications.  According to several studies, both microsatellites and SNPs are effective markers for population assignment and genetic stock identification, although a large number of SNPs may be required to identify fine-scale population differentiation \citep{Narumetal2008, Hessetal2011, Morinetal2004}.  SNPs have also been shown outperform microsatellites in the accuracy of parentage assignments \citep{Hauseretal2011}, and the effectiveness and accuracy of linkage maps for chromosomes \citep{Balletal2010}.
+
+However, identifying contaminated samples using SNP genotyping data is more difficult than with genotyping data from highly polymorphic microsatellites.  With microsatellites, contamination is detected when there are more than two alleles in a diploid sample.  This method is not possible with SNPs given their bi-allelic nature.  A logical method to eliminate contamination is to identify samples with an excess of heterozygous loci, as the presence of DNA from two or more individuals will increase the rate of heterozygousity.  Although considering heterozygousity does not use all the information in the SNP genotyping data, it can be a powerful method for simple tests of single individuals.  However, in the presence of multiple tests, a principled modeling of the situation is preferable.
+
+Several studies have developed models using SNP genotyping data to identify contamination in human DNA samples \citep{Junetal2012, Cibulskisetal2011, Huangetal2014}.  However, these models incorporate sequencing data as well as information from the complete human genome, which is not available for non-model organisms studied in molecular ecology.  Jasper et. al (2012) developed a Bayesian model to identify cross-contaminated DNA samples in salmon. They used model selection between contaminated and uncontaminated genotype score probabilities, requiring a direct estimate of the rate of contamination.
+
+Here we present a simple Bayesian model for identifying contaminated samples given an unknown rate of contamination that will be most useful in situations where laboratory error has accidentally pooled two samples.  We tailored our model for two applications of SNP genotyping: (1) the estimation of allele frequencies of a single population and (2) the population identification of organisms sampled from a mixture of multiple populations for which reference samples are available.  In this paper, we describe the models and MCMC algorithms used to sample from the posterior distribution of our unknown variables.  We also discuss a set of simulations used to assess our model that demonstrate the models accurate identification of contaminated samples.  Finally, as an example of the method's use, we apply the method to several large SNP data sets in our laboratory.
+
+
+
+
+\section*{Methods}
+\subsection*{Statistical Models}
+We begin by formulating a model for detecting contaminated samples from a collection in which all the
+individuals, as well as any contaminating DNA, originate from a single population, calling this the Single Source Population (SSP) model.  Let the collection 
+include $N$ genetic samples, each one typed at $L$ SNPs, assumed in our model to not be in linkage 
+disequilibrium (LD) in the population.  Without loss of generality, we label one allele at each SNP ``0'' 
+and the other ``1''.  At the $\ell\thh$ SNP we let $\theta_\ell$ denote the frequency of the ``1'' allele, 
+$\ell\in\{1,\ldots,L\}$, in the population from whence the samples originate. Associated with each sample
+$i$ ($i\in\{1,\ldots,N\})$ is an unobserved indicator variable $z_i$ which takes the value 1 if sample $i$ 
+is contaminated (contains DNA from 2 individuals) and 0 if sample $i$ contains DNA from just a single 
+individual. The observed genotype of sample $i$ at locus $\ell$ is denoted by $y_{i,\ell}$.  If a sample 
+contains only ``0'' alleles, $y_{i,\ell}=0$, if both a ``0'' and ``1'' allele are detected, $y_{i,\ell}
+=1$, and if the sample contains only ``1'' alleles then $y_{i,\ell}=2$.  If sample $i$ is not 
+contaminated, and is from a diploid, the probability of $y_{i,\ell}$ is assumed to follow independent 
+sampling of alleles from the population (\ie the expected genotype frequencies conform to the Hardy-
+Weinberg law):
+\begin{eqnarray} \label{HW_clean}
+P(y_{i,\ell} = 0\:|\:z_i = 0) & = & (1-\theta_\ell)^2 \nonumber\\
+P(y_{i,\ell} = 1\:|\:z_i = 0) & = & 2\theta_\ell(1-\theta_\ell) \\
+P(y_{i,\ell} = 2\:|\:z_i = 0) & = & \theta_\ell^2  \nonumber
+\end{eqnarray}
+If the sample is contaminated, we assume that it contains the DNA from two unrelated individuals and both doses of DNA appear in the observed phenotype of the individual.  Hence:
+\begin{eqnarray} \label{HW_contam}
+P(y_{i,\ell} = 0\:|\:z_i = 1) & = & (1-\theta_\ell)^4 \nonumber\\
+P(y_{i,\ell} = 1\:|\:z_i = 0) & = & 1 - \theta_\ell^4 - (1-\theta_\ell)^4 \\
+P(y_{i,\ell} = 2\:|\:z_i = 1) & = & \theta_\ell^4  \nonumber
+\end{eqnarray}
+We let $\rho$ denote the contamination rate in our collection: given $\rho$ each sample in 
+our collection is contaminated, independently, with probability $\rho$.  Note that we assume that the DNA 
+that contaminates a sample is drawn randomly from the population, independently between samples.  
+
+Our goal is to use the observed genotype data from each individual at all the loci to infer the allele 
+frequencies in the population, $\theta = (\theta_1,\ldots,\theta_L)$, the contamination rate, $\rho$, and 
+the contamination status of each individual, $z = (z_1,\ldots,z_N)$.  To pursue this inference in a 
+Bayesian fashion, we complete the model by placing prior distributions upon $\rho$ and $\theta$.  The 
+prior for $\rho$ is a beta distribution with parameters $\alpha$ and $\beta$, and the prior for each $
+\theta_\ell$ is independently a beta distribution with both parameters equal to $\lambda$.  In all of our 
+experiments we set the hyperparameters to give unit-information priors: $\alpha=\beta=\lambda=0.5$.
+Figure~\ref{fig:dag1} shows the directed acyclic graph for the SSP model.  To perform the inference we developed an MCMC algorithm relying on simple Gibbs-sample updates for all the unobserved variables, the details of which appear in Appendix~\ref{app:ssp}.
+
+
+
+%%%% The DAG figure
+\begin{figure}[tp]
+\begin{center}
+\includegraphics[width=\columnwidth]{./images/DAG_1.pdf}
+\end{center}
+\caption{Directed acyclic graph (DAG) representing the SSP model.  Black nodes are observed, gray ones are parameters of prior distributions, and unfilled nodes are unobserved variables that are the goal of inference. }
+\label{fig:dag1}
+\end{figure}
+
+Put some references in just for testing: \citep{Andersonetal2008}.
+
+We next formulate a model for detecting contaminated samples from a collection in which the individuals, as well as contaminating DNA, originate from a mixture of population, calling this the Multiple Source Population (MSP) model.  As with the MSP model, the collection includes $N$ genetic samples, each one typed at $L$ SNPs, from $P$ populations.  Again, samples are assumed to not be in linkage disequilibrium (LD) in each population.  We used the same labels as in the SSP model to represent the alleles, allele frequencies, and genotypes and assumed the same probability distributions for $y_{i,\ell}$.  We again used $z_i$ as a contamination indiciator value and $\rho$ to denote the contamination rate.
+
+In the MSP model, associated with each sample $i$ is another unobserved indicator variable $u_i$ ($u_i\in\{1,\ldots,P\}$), which takes a single value that indicates the population of origin of a non-contaminated sample and takes two values that indicate the two populations of origin in a contaminated sample.  We let $\pi = (\pi_1,\ldots,\pi_P)$ denote the mixing proportion from the source of the samples. Given $\pi_k$, a sample in our collection originates from population $k$ with a probability of $\pi_k$.  In the MSP model, we assumed that the DNA that contaminates a sample is drawn randomly from the source, independtly between samples, meaning that individuals originating from populations with a higher $\pi$ value are assumed to have a higher probability of being the source of contamination. Our model also uses previously collected baseline data, $B$, to estimate the allele frequencies, $\theta = (\theta_1, \ldots, \theta_L)$, in each of the $P$ populatons.
+
+Our goal is to use the observed baseline data and the observed genotype data from each individual at all the loci to infer the mixing proportions, $\pi = (\pi_1, \ldots, \pi_P)$, population origin of the samples, $u_i = (u_1, \ldots, u_N)$, the contamination rate, $\rho$, and the contamination status of each individual, $z = (z_1, \ldots, z_N)$.  We placed the same prior distributions upon $\rho$ and $\theta$ as in the SSP model, and placed a Dirichlet distribution with parameters $\xi$ on $\pi$. In our experiments, we set the hyperparameters to the given unit-information priors:
+$\alpha=\beta=\lambda=0.5$ and
+$\xi= (\frac{1}{P}, \ldots, \frac{1}{P})$
+Figure~\ref{fig:dag2}
+shows the directed acyclic graph for the MSP model.  We again developed an MCMC algorithm relying on simple Gibbs-sample updates for all the unobserved variables, the details of which appear in Appendix%~\ref{app:ssp}.
+
+%%%% The DAG_2 figure
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=\columnwidth]{./images/DAG_2.pdf}
+\end{center}
+\caption{Directed acyclic graph (DAG) representing the MSP model.  Black nodes are observed, gray ones are parameters of prior distributions, and unfilled nodes are unobserved variables that are the goal of inference. }
+\label{fig:dag2}
+\end{figure}
+
+\subsection*{Test Simulations}
+We tested our SSP model using \emph{in silico} data generated under the Hardy-Weinberg.  Each simulation had four parameters: $n$, the number of samples; $\rho$, the contamination proportion; $L$, the number of loci in each sample; and $\boldsymbol{\theta}$, the allele frequence at each locus $1$ through $L$. For each simulation, $n=200$, meaning that we created 200 samples. We randomly drew $L$ allele frequencies with replacement from the Feather River Hatchery Spring run Chinook salmon population to create $\boldsymbol{\theta}$ for each simulation (cite paper).  We then created the \emph{in silico} genotypes by sampling the genotype of each locus of each individual using  
+the distribution in Eq. \ref{HW_clean} for non-contaminated individuals.  A number of individuals were "contaminated" according to $\rho$. The genotypes of each locus of the contaminated individuals were sampled from the distribution in Eq. \ref{HW_contam}.  We simulated data with values of $L = (20,60,100,200)$ and $\rho = (0,0.025,0.075,0.2,0.5)$, creating a total of 20 different sets of parameters.  We ran 100 simulations for each set of parameters.
+
+We tested our MSP model using actual Chinook salmon genotypes with 95 loci from previously collected baseline data (cite paper). Each simulation had three addition parameters: $\pi$, the mixing proportions for each population; $u$, the population identification of each the individual; and $B$, the baseline data.  For each simulation, $n=200$.  We sampled the genotypes from the original baseline data using 20 different sets of $\pi$, which are mixing proportions observed at different West Coast fisheries at different times of the year.  We created the new baseline for each simulation by removing the randomly sampled genotypes. Non-contaminated individuals' genotypes were the sampled genotypes from the baseline.  We created a number of "contaminated" individuals by combining the genotype of two randomly selected individuals from the baseline. We simulated the data using the same five values for $\rho$ as in the SSP simulation, creating a total of 100 different sets of parameters.  We ran 20 simulations for each set of parameters.
+
+%%%  RHO AND ALLELE FIGURE
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=\columnwidth]{./images/rho_and_allele.pdf}
+\end{center}
+\caption{({\em a}) Boxplots showing the distribution of posterior mean estimates of $\rho$ under varying true values of the fraction of contaminated samples  (listed along the top edge of edge panel) and number of loci (20, 60, 100, 200, as listed along the $x$-axis). Each boxplot summarizes 100 estimates. ({\em b}) Posterior mean estimates (on the $y$-axis) of allele frequencies, $\theta_\ell$  plotted against the true values (on the $x$-axis).  Results shown are from all 100 simulation replicates with $L=20$ and $\rho=0.2$.}
+\end{figure}
+
+
+
+%%% The allele frequency CI coverage table
+\begin{table}
+\caption{Coverage of posterior credible intervals for allele frequencies.  ADD MORE LATER.}
+\hrule \hrule
+\begin{center}
+\input{tables/afreq_ci_coverage}
+\end{center}
+\hrule
+\end{table}
+
+
+%%% The false and true positive z_table
+\begin{table}
+\caption{True positive and false positive rates.  {\em (a)}~Across all simulated 
+data sets with given values of $\rho$ and $L$, the fraction of truly contaminated
+samples inferred to have posterior probability $>0.5$ of being contaminated, [\ie $P(z_i=1|\mathbf{y})>0.5$].
+{\em (b)}~Fraction of non-contaminated samples with $P(z_i=1|\mathbf{y})>0.5$.}
+\hrule\hrule
+\mbox{}\\
+\input{tables/z_table_p_one_half}
+\hrule
+\end{table}
+
