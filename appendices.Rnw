@@ -1,5 +1,5 @@
 
-\section{MCMC in the SSP model}
+\chapter{MCMC in the SSP model}
 
 In the SSP, our sample collection includes $N$ samples with $L$ SNP loci.  Only the genotypes of the sampled individuals, $y_{i,\ell}$, are 
 known. The contamination rate, $\rho$, the allele frequency of the "1" allele at the $\ell^{th}$ locus, $\theta_{\ell}$, and the indicator variable $z_i$ are unknown paramenters.  
@@ -62,7 +62,7 @@ P(\theta_{\ell}|y_{i\ell},z_i) &\propto& [\prod_{i=\ell}^{N} P(y_{i\ell}|\theta_
 & \propto& \theta_{\ell}^{2x_0 + x_1 + \lambda_{\ell} - 1}(1-\theta_{\ell})^{2x_0 + x_1 + \lambda_{\ell} - 1}
 \end{eqnarray}
 
-\section{MCMC in the MSP model}
+\chapter{MCMC in the MSP model}
 
 In the MSP, our sample collection includes $N$ samples with $L$ SNP loci from $P$ populations.  The genotypes of the sampled individuals, $y_{i,\ell}$, and the baseline data, $B$, are the only known parameters. The contamination rate, $\rho$, the mixing proprotions, $\pi$, the indicator variable $u_i$, and the indicator variable $z_i$ are unknown paramenters.  
 
