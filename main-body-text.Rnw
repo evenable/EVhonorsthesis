@@ -2,66 +2,116 @@
 
 \chapter{Introduction}
 
-Single nucleotide polymorphisms (SNPs) have emerged as an important genetic marker, and their use is becoming widespread in molecular ecology.  The low cost of SNP genotyping makes it a practical alternative to microsatellite genotyping \citep{Anderson&Garza2006}.  SNP genotyping codes are also independent of the genotyping system, allowing for easy standardization across laboratories \citep{Morinetal2004}.  In addition, SNPs are present in large amounts in many species' genotypes \citep{Morinetal2004}, specific SNP loci under diversifying selection can be divergent between populations \citep{Freamoetal2011, Karlssonetal2011}, and SNP genotyping can be used on short fragments, providing low genotyping failure and error rates in historical or low-quality samples \citep{Morin&McCarthy2007, Smithetal2011}.  Studies have also shown that SNPs are comparable or better than microsatellites in most applications.  According to several studies, both microsatellites and SNPs are effective markers for population assignment and genetic stock identification, although a large number of SNPs may be required to identify fine-scale population differentiation \citep{Narumetal2008, Hessetal2011, Morinetal2004}.  SNPs have also been shown outperform microsatellites in the accuracy of parentage assignments \citep{Hauseretal2011}, and the effectiveness and accuracy of linkage maps for chromosomes \citep{Balletal2010}.
+Single nucleotide polymorphisms (SNPs), which are locations in the DNA sequence that vary by a single base pair, have emerged as an important genetic marker, and their use is becoming widespread in molecular ecology.  The low cost of SNP genotyping makes it a practical alternative to microsatellite genotyping \citep{Anderson&Garza2006}.  SNP genotyping codes are also independent of the genotyping system, allowing for easy standardization across laboratories \citep{Morinetal2004}.  In addition, SNPs are present in large amounts in many species' genotypes \citep{Morinetal2004}, specific SNP loci under diversifying selection can be divergent between populations \citep{Freamoetal2011, Karlssonetal2011}, and SNP genotyping can be used on short fragments, providing low genotyping failure and error rates in historical or low-quality samples \citep{Morin&McCarthy2007, Smithetal2011}.  Studies have also shown that SNPs are comparable or better than microsatellites in most applications.  According to several studies, both microsatellites and SNPs are effective markers for population assignment and genetic stock identification, although a large number of SNPs may be required to identify fine-scale population differentiation \citep{Narumetal2008, Hessetal2011, Morinetal2004}.  SNPs have also been shown outperform microsatellites in the accuracy of parentage assignments \citep{Hauseretal2011}, and the effectiveness and accuracy of linkage maps for chromosomes \citep{Balletal2010}.
 
 However, identifying contaminated samples using SNP genotyping data is more difficult than with genotyping data from highly polymorphic microsatellites.  With microsatellites, contamination is detected when there are more than two alleles in a diploid sample.  This method is not possible with SNPs given their bi-allelic nature.  A logical method to eliminate contamination is to identify samples with an excess of heterozygous loci, as the presence of DNA from two or more individuals will increase the rate of heterozygousity.  Although considering heterozygousity does not use all the information in the SNP genotyping data, it can be a powerful method for simple tests of single individuals.  However, in the presence of multiple tests, a principled modeling of the situation is preferable.
 
-Several studies have developed models using SNP genotyping data to identify contamination in human DNA samples \citep{Junetal2012, Cibulskisetal2011, Huangetal2014}.  However, these models incorporate sequencing data as well as information from the complete human genome, which is not available for non-model organisms studied in molecular ecology.  Jasper et. al (2012) developed a Bayesian model to identify cross-contaminated DNA samples in salmon. They used model selection between contaminated and uncontaminated genotype score probabilities, requiring a direct estimate of the rate of contamination.
+Several studies have developed models using SNP genotyping data to identify contamination in human DNA samples \citep{Junetal2012, Cibulskisetal2011, Huangetal2014}.  However, these models incorporate sequencing data as well as information from the complete human genome, which is not available for non-model organisms studied in molecular ecology.  Jasper et. al (2012) developed a Bayesian model to identify cross-contaminated DNA samples in salmon; however, their model, which used model selection between contaminated and uncontaminated genotype score probabilities, requires an estimate of the rate of contamination.
 
-Here we present a simple Bayesian model for identifying contaminated samples given an unknown rate of contamination that will be most useful in situations where laboratory error has accidentally pooled two samples.  We tailored our model for two applications of SNP genotyping: (1) the estimation of allele frequencies of a single population and (2) the population identification of organisms sampled from a mixture of multiple populations for which reference samples are available.  In this paper, we describe the models and MCMC algorithms used to sample from the posterior distribution of our unknown variables.  We also discuss a set of simulations used to assess our model that demonstrate the models accurate identification of contaminated samples.  Finally, as an example of the method's use, we apply the method to several large SNP data sets in our laboratory.
+Here I present a simple Bayesian model for identifying contaminated samples given an unknown rate of contamination that will be most useful in situations where laboratory error has accidentally pooled two DNA samples.  I tailored our model for two applications of SNP genotyping: (1) the estimation of allele frequencies of a single population and (2) the population identification of organisms sampled from a mixture of multiple populations for which reference samples are available.  In this paper, I describe the models and Markov Chain Monte Carlo (MCMC) algorithms used to sample from the posterior distribution of our unknown variables.  I also discuss a set of simulations used to assess the model that demonstrate the model's accurate identification of contaminated samples.  Finally, as an example of the method's use, I apply the method to several large SNP data sets in our laboratory.
 
-
-
-
+%Section on the SSP Model
 \chapter{Single Source Population Model}
-We begin by formulating a model for detecting contaminated samples from a collection in which all the
-individuals, as well as any contaminating DNA, originate from a single population, calling this the Single Source Population (SSP) model.  Let the collection 
-include $N$ genetic samples, each one typed at $L$ SNPs, assumed in our model to not be in linkage 
-disequilibrium (LD) in the population.  Without loss of generality, we label one allele at each SNP ``0'' 
-and the other ``1''.  At the $\ell\thh$ SNP we let $\theta_\ell$ denote the frequency of the ``1'' allele, 
+This chapter describes the formulation of the Single Source Population (SSP) model, which is used for detecting contaminated samples from a collection in which all the
+individuals, as well as any contaminating DNA, originate from a single population.  The collection of DNA in the SSP model
+includes $N$ genetic samples, and each sample is genotyped at $L$ SNP loci, which are assumed to not be in linkage 
+disequilibrium (LD) in the population.  One allele at each SNP is labeled ``0'' 
+and the other ``1''.  At the $\ell\thh$ SNP, $\theta_\ell$ denotes the frequency of the ``1'' allele, 
 $\ell\in\{1,\ldots,L\}$, in the population from whence the samples originate. Associated with each sample
 $i$ ($i\in\{1,\ldots,N\})$ is an unobserved indicator variable $z_i$ which takes the value 1 if sample $i$ 
 is contaminated (contains DNA from 2 individuals) and 0 if sample $i$ contains DNA from just a single 
-individual. The observed genotype of sample $i$ at locus $\ell$ is denoted by $y_{i,\ell}$.  If a sample 
+individual. The known variable $y_{i,\ell}$ denotes the observed genotype of sample $i$ at locus $\ell$.  If a sample 
 contains only ``0'' alleles, $y_{i,\ell}=0$, if both a ``0'' and ``1'' allele are detected, $y_{i,\ell}
 =1$, and if the sample contains only ``1'' alleles then $y_{i,\ell}=2$.  If sample $i$ is not 
 contaminated, and is from a diploid, the probability of $y_{i,\ell}$ is assumed to follow independent 
-sampling of alleles from the population (\ie the expected genotype frequencies conform to the Hardy-
-Weinberg law):
+sampling of alleles from the population, conforming to the Hardy-
+Weinberg law:
 \begin{eqnarray} \label{HW_clean}
 P(y_{i,\ell} = 0\:|\:z_i = 0) & = & (1-\theta_\ell)^2 \nonumber\\
 P(y_{i,\ell} = 1\:|\:z_i = 0) & = & 2\theta_\ell(1-\theta_\ell) \\
 P(y_{i,\ell} = 2\:|\:z_i = 0) & = & \theta_\ell^2  \nonumber
 \end{eqnarray}
-If the sample is contaminated, we assume that it contains the DNA from two unrelated individuals and both doses of DNA appear in the observed phenotype of the individual.  Hence:
+If the sample is contaminated, it is assumed that the sample contains the DNA from two unrelated individuals and that both doses of DNA appear in the observed phenotype of the individual.  These assumptions yield the following probabilities for any given genotype:
 \begin{eqnarray} \label{HW_contam}
 P(y_{i,\ell} = 0\:|\:z_i = 1) & = & (1-\theta_\ell)^4 \nonumber\\
 P(y_{i,\ell} = 1\:|\:z_i = 0) & = & 1 - \theta_\ell^4 - (1-\theta_\ell)^4 \\
 P(y_{i,\ell} = 2\:|\:z_i = 1) & = & \theta_\ell^4  \nonumber
 \end{eqnarray}
-We let $\rho$ denote the contamination rate in our collection: given $\rho$ each sample in 
-our collection is contaminated, independently, with probability $\rho$.  Note that we assume that the DNA 
+The unobserved variable $\rho$ denotes the contamination rate in the collection. Given $\rho$, each sample in 
+the collection is contaminated, independently, with probability $\rho$.  We assume that the DNA 
 that contaminates a sample is drawn randomly from the population, independently between samples.  
 
-Our goal is to use the observed genotype data from each individual at all the loci to infer the allele 
+
+Figure~\ref{fig:dag1} shows the directed acyclic graph (DAG) for the SSP model. As seen in the DAG, the goal of the model is to use the observed genotype data from each individual at all the loci to infer the allele 
 frequencies in the population, $\theta = (\theta_1,\ldots,\theta_L)$, the contamination rate, $\rho$, and 
-the contamination status of each individual, $z = (z_1,\ldots,z_N)$.  To pursue this inference in a 
-Bayesian fashion, we complete the model by placing prior distributions upon $\rho$ and $\theta$.  The 
+the contamination status of each individual, $z = (z_1,\ldots,z_N)$.  To perform 
+Bayesian inference, prior distributions are placed on $\rho$ and $\theta$.  The 
 prior for $\rho$ is a beta distribution with parameters $\alpha$ and $\beta$, and the prior for each $
-\theta_\ell$ is independently a beta distribution with both parameters equal to $\lambda$.  In all of our 
-experiments we set the hyperparameters to give unit-information priors: $\alpha=\beta=\lambda=0.5$.
-Figure~\ref{fig:dag1} shows the directed acyclic graph for the SSP model.  To perform the inference we developed an MCMC algorithm relying on simple Gibbs-sample updates for all the unobserved variables, the details of which appear in Appendix~\ref{app:ssp}.
-
-
+\theta_\ell$ is independently a beta distribution with both parameters equal to $\lambda$. Inference was performed using an MCMC algorithm relying on simple Gibbs-sample updates for all the unobserved variables.\\
 
 %%%% The DAG figure
-\begin{figure}[tp]
+\begin{figure}[h]
 \begin{center}
-\includegraphics[width=\columnwidth]{./images/DAG_1.pdf}
+\includegraphics[width=3.5in]{./images/DAG_1.pdf}
 \end{center}
 \caption[Directed acyclic graph (DAG) representing the SSP model.]{Directed acyclic graph (DAG) representing the SSP model. Black nodes are observed, gray ones are parameters of prior distributions, and unfilled nodes are unobserved variables that are the goal of inference.}
 \label{fig:dag1}
 \end{figure}
+
+%Derivation of full conditionals
+Derivation of the full conditional distributions of $\rho$, $\theta_{\ell}$, and $z_i$ were required to updated these unobserved paramenters using Gibbs sampling. The formula for the full conditional of $z_i$ is given Eq.\ref{z_fc}.
+
+\begin{equation} \label{z_fc}
+P(z_i|\theta_{\ell},y_i,\rho) = P(z_i|\rho)P(y_i|z_i,\theta)
+\end{equation}
+$P(z_i|\rho)$ is the likelihood of the $z_i$ value given $\rho$, and $P(y_i|z_i,\theta)$ is the likelihood of the genotype given $z_i$ and $\theta$.  A Bernoulli distribution gives the likelihood of $z_i$, and the likelihood of the genotype is calculated using Eq.\ref{HW_clean} or Eq.\ref{HW_contam}, depending on the value of $z_i$:
+
+\begin{equation} \label{z_lh}
+P(z_i|\rho) = \rho^{z_i}(1-\rho)^{1-z_i} 
+\end{equation}
+
+
+\begin{equation} \label{y_lh}
+P(y_i|z_i=0,\theta) = \prod_{\ell=1}^{L} P(y_{\ell}|\theta_{\ell},noncontam)
+\end{equation}
+\begin{equation} \label{y_lhc}
+P(y_i|z_i=1,\theta) = \prod_{\ell=1}^{L} P(y_{\ell}|\theta_{\ell},contam)
+\end{equation}
+After substituting the above equations into Eq.\ref{z_fc}, the full conditional distribution of $z_i$ used in the MCMC modelis given by Eq. \ref{z_simpfc}. Dividing by $R$ normalizes the distribution.
+%Full conditional of z
+\begin{eqnarray} \label{z_simpfc}
+P(z_i=0|\theta_{\ell},y_i,\rho) &=& \frac{(1-\rho)^{1-z_i}\prod_{\ell=1}^{L} P(y_{\ell}|\theta_{\ell},noncontam)}{R} \nonumber \\
+P(z_i=1|\theta_{\ell},y_i,\rho) &=& \frac{\rho^{z_i}\prod_{\ell=1}^{L} P(y_{\ell}|\theta_{\ell},contam)}{R} \nonumber \\
+R &=& (1-\rho)^{1-z_i}\prod_{\ell=1}^{L} P(y_{\ell}|\theta_{\ell},noncontam) + \rho^{z_i}\prod_{\ell=1}^{L} P(y_{\ell}|\theta_{\ell},contam)
+\end{eqnarray}
+%Derive full conditional of rho
+The formula for the full conditional distribution for $\rho$ is given by:
+  \begin{equation} \label{rho_fc}
+    P(\rho|z_i) \propto [\prod_{i=1}^{N} P(z_i|\rho)] P(\rho|\alpha,\beta)
+  \end{equation}
+As shown below, substituting Eq. \ref{z_lh} and the prior beta distribution for $\rho$ can reduce the full conditional distribution of $\rho$ to a beta distribution with parameters $(\alpha + \sum_{i=1}^{N} z_i)$ and $(\beta + N - \sum_{i=1}^{N} z_i)$.
+
+\begin{eqnarray} \label{rho_simpfc}
+  P(\rho|z_i) &\propto& [\prod_{i=1}^{N} P(z_i|\rho)] P(\rho|\alpha,\beta) \nonumber \\
+  &=& [\prod_{i=1}^{N} \rho^{z_i}(1 - \rho)^{1 - z_i}] \rho^{\alpha - 1}(1 - \rho)^{\beta-1} \nonumber \\
+  &=& \rho^{\sum_{i=1}^{N} z_i}(1-\rho)^{N - \sum_{i=1}^{N} z_i} \rho^{\alpha -1} (1-\rho)^{\beta-1} \nonumber \\
+  &=& \rho^{\alpha - 1 + \sum_{i=1}^{N} z_i}(1 - \rho)^{\beta -1 + N - \sum_{i=1}^{N} z_i}
+\end{eqnarray}
+The full conditional distribution of $\theta_{\ell}$ given by:
+
+\begin{equation} \label{theta_fc}
+P(\theta_{\ell}|y_{i\ell},z_i) \propto [\prod_{i=\ell}^{N} P(y_{i\ell}|\theta_{\ell},z_i)]P(\theta_{\ell}|\lambda_{\ell})
+\end{equation}
+Only non-contaminated genotypes are used to calculate allele frequencies.  Therefore, only non-contaminated samples are relevant for the full condition distribution of $\theta_{\ell}$.  The likelihood of $y_{i\ell}$ given $\theta_{\ell}$ and non-contamination, $P(y_{i\ell}|\theta_{\ell},noncontam)$, is calculated assuming that the population is in Hardy-Weinberge Equilibrium. Evaluating $P(y_{i\ell}|\theta_{\ell},noncontam)$ and substituting the prior beta distribution of $\theta_{\ell}$ into Eq \ref{theta_fc} symplifies the full conditional distribution of $\theta_{\ell}$ to a beta distribution with parameters $(2x_2 + x_1 + \lambda_{\ell})$ and $(2x_0 + x_1 + \lambda_{\ell})$ where $x_j = \sum_{i:z=0}^{N} \delta(y_{i\ell} = j)$. 
+
+\begin{eqnarray} \label{theta_simpfc}
+P(\theta_{\ell}|y_{i\ell},z_i) &\propto& [\prod_{i=\ell}^{N} P(y_{i\ell}|\theta_{\ell},z_i)]P(\theta_{\ell}|\lambda_{\ell}) \nonumber \\
+&=& [\prod_{i:z=0}^{N} P(y_{i\ell}|\theta_{\ell},noncontam)] \nonumber \\
+& & \times \theta_{\ell}^{\lambda_{\ell} - 1}(1-\theta_{\ell})^{\lambda_{\ell} - 1} \nonumber \\
+&=& [(1-\theta_{\ell})^2]^{x_0}[2\theta_{\ell}(1-\theta_{\ell})]^{x_1}[\theta_{\ell}^2]^{x_2} \nonumber \\
+& & \times \theta_{\ell}^{\lambda_{\ell} - 1}(1 - \theta_{\ell})^{\lambda_{\ell} - 1} \nonumber \\
+& \propto& \theta_{\ell}^{2x_0 + x_1 + \lambda_{\ell} - 1}(1-\theta_{\ell})^{2x_0 + x_1 + \lambda_{\ell} - 1}
+\end{eqnarray}
 
 
 \chapter{Multiple Source Populations Model}
