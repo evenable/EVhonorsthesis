@@ -17,7 +17,7 @@ individuals, as well as any contaminating DNA, originate from a single populatio
 includes $N$ genetic samples, and each sample is genotyped at $L$ SNP loci, which are assumed to not be in linkage 
 disequilibrium (LD) in the population.  One allele at each SNP is labeled ``0'' 
 and the other ``1''.  At the $\ell\thh$ SNP, $\theta_\ell$ denotes the frequency of the ``1'' allele, 
-$\ell\in\{1,\ldots,L\}$, in the population from whence the samples originate. Associated with each sample
+$\ell\in\{1,\ldots,L\}$, in the population from which the samples originate. Associated with each sample
 $i$ ($i\in\{1,\ldots,N\})$ is an unobserved indicator variable $z_i$ which takes the value 1 if sample $i$ 
 is contaminated (contains DNA from 2 individuals) and 0 if sample $i$ contains DNA from just a single 
 individual. The known variable $y_{i,\ell}$ denotes the observed genotype of sample $i$ at locus $\ell$.  If a sample 
@@ -31,7 +31,7 @@ P(y_{i,\ell} = 0\:|\:z_i = 0) & = & (1-\theta_\ell)^2 \nonumber\\
 P(y_{i,\ell} = 1\:|\:z_i = 0) & = & 2\theta_\ell(1-\theta_\ell) \\
 P(y_{i,\ell} = 2\:|\:z_i = 0) & = & \theta_\ell^2  \nonumber
 \end{eqnarray}
-If the sample is contaminated, it is assumed that the sample contains the DNA from two unrelated individuals and that both doses of DNA appear in the observed phenotype of the individual.  These assumptions yield the following probabilities for any given genotype:
+If the sample is contaminated, it is assumed that the sample contains the DNA from two unrelated individuals and that both doses of DNA appear in the observed phenotype of the individual.  Therefore, the following formulas give the probabilities for any given genotype:
 \begin{eqnarray} \label{HW_contam}
 P(y_{i,\ell} = 0\:|\:z_i = 1) & = & (1-\theta_\ell)^4 \nonumber\\
 P(y_{i,\ell} = 1\:|\:z_i = 0) & = & 1 - \theta_\ell^4 - (1-\theta_\ell)^4 \\
@@ -47,7 +47,7 @@ frequencies in the population, $\theta = (\theta_1,\ldots,\theta_L)$, the contam
 the contamination status of each individual, $z = (z_1,\ldots,z_N)$.  To perform 
 Bayesian inference, prior distributions are placed on $\rho$ and $\theta$.  The 
 prior for $\rho$ is a beta distribution with parameters $\alpha$ and $\beta$, and the prior for each $
-\theta_\ell$ is independently a beta distribution with both parameters equal to $\lambda$. Inference was performed using an MCMC algorithm relying on simple Gibbs-sample updates for all the unobserved variables.\\
+\theta_\ell$ is independently a beta distribution with both parameters equal to $\lambda$. Inference was performed using an MCMC algorithm relying on Gibbs-sample updates for all the unobserved variables.\\
 
 %%%% The DAG figure
 \begin{figure}[h]
@@ -59,12 +59,12 @@ prior for $\rho$ is a beta distribution with parameters $\alpha$ and $\beta$, an
 \end{figure}
 
 %Derivation of full conditionals
-Derivation of the full conditional distributions of $\rho$, $\theta_{\ell}$, and $z_i$ were required to updated these unobserved paramenters using Gibbs sampling. The formula for the full conditional of $z_i$ is given Eq.\ref{z_fc}.
+Derivation of the full conditional distributions of $\rho$, $\theta_{\ell}$, and $z_i$ were required to update these unobserved paramenters using Gibbs sampling. The formula for the full conditional of $z_i$ is given Equation~\ref{z_fc}.
 
 \begin{equation} \label{z_fc}
 P(z_i|\theta_{\ell},y_i,\rho) = P(z_i|\rho)P(y_i|z_i,\theta)
 \end{equation}
-$P(z_i|\rho)$ is the likelihood of the $z_i$ value given $\rho$, and $P(y_i|z_i,\theta)$ is the likelihood of the genotype given $z_i$ and $\theta$.  A Bernoulli distribution gives the likelihood of $z_i$, and the likelihood of the genotype is calculated using Eq.\ref{HW_clean} or Eq.\ref{HW_contam}, depending on the value of $z_i$:
+$P(z_i|\rho)$ is the likelihood of the $z_i$ value given $\rho$, and $P(y_i|z_i,\theta)$ is the likelihood of the genotype given $z_i$ and $\theta$.  A Bernoulli distribution gives the likelihood of $z_i$, and the likelihood of the genotype is calculated using Equation~\ref{HW_clean} or Equation~\ref{HW_contam}, depending on the value of $z_i$:
 
 \begin{equation} \label{z_lh}
 P(z_i|\rho) = \rho^{z_i}(1-\rho)^{1-z_i} 
@@ -77,7 +77,7 @@ P(y_i|z_i=0,\theta) = \prod_{\ell=1}^{L} P(y_{\ell}|\theta_{\ell},noncontam)
 \begin{equation} \label{y_lhc}
 P(y_i|z_i=1,\theta) = \prod_{\ell=1}^{L} P(y_{\ell}|\theta_{\ell},contam)
 \end{equation}
-After substituting the above equations into Eq.\ref{z_fc}, the full conditional distribution of $z_i$ used in the MCMC modelis given by Eq. \ref{z_simpfc}. Dividing by $R$ normalizes the distribution.
+After substituting the above equations into Equation~\ref{z_fc}, the full conditional distribution of $z_i$ used in the MCMC modelis given by Equation~\ref{z_simpfc}. Dividing by $R$ normalizes the distribution.
 %Full conditional of z
 \begin{eqnarray} \label{z_simpfc}
 P(z_i=0|\theta_{\ell},y_i,\rho) &=& \frac{(1-\rho)^{1-z_i}\prod_{\ell=1}^{L} P(y_{\ell}|\theta_{\ell},noncontam)}{R} \nonumber \\
@@ -89,7 +89,7 @@ The formula for the full conditional distribution for $\rho$ is given by:
   \begin{equation} \label{rho_fc}
     P(\rho|z_i) \propto [\prod_{i=1}^{N} P(z_i|\rho)] P(\rho|\alpha,\beta)
   \end{equation}
-As shown below, substituting Eq. \ref{z_lh} and the prior beta distribution for $\rho$ can reduce the full conditional distribution of $\rho$ to a beta distribution with parameters $(\alpha + \sum_{i=1}^{N} z_i)$ and $(\beta + N - \sum_{i=1}^{N} z_i)$.
+As shown below, substituting Equation~\ref{z_lh} and the prior beta distribution for $\rho$ can reduce the full conditional distribution of $\rho$ to a beta distribution with parameters $(\alpha + \sum_{i=1}^{N} z_i)$ and $(\beta + N - \sum_{i=1}^{N} z_i)$.
 
 \begin{eqnarray} \label{rho_simpfc}
   P(\rho|z_i) &\propto& [\prod_{i=1}^{N} P(z_i|\rho)] P(\rho|\alpha,\beta) \nonumber \\
@@ -102,7 +102,7 @@ The full conditional distribution of $\theta_{\ell}$ given by:
 \begin{equation} \label{theta_fc}
 P(\theta_{\ell}|y_{i\ell},z_i) \propto [\prod_{i=\ell}^{N} P(y_{i\ell}|\theta_{\ell},z_i)]P(\theta_{\ell}|\lambda_{\ell})
 \end{equation}
-Only non-contaminated genotypes are used to calculate allele frequencies.  Therefore, only non-contaminated samples are relevant for the full condition distribution of $\theta_{\ell}$.  The likelihood of $y_{i\ell}$ given $\theta_{\ell}$ and non-contamination, $P(y_{i\ell}|\theta_{\ell},noncontam)$, is calculated assuming that the population is in Hardy-Weinberge Equilibrium. Evaluating $P(y_{i\ell}|\theta_{\ell},noncontam)$ and substituting the prior beta distribution of $\theta_{\ell}$ into Eq \ref{theta_fc} symplifies the full conditional distribution of $\theta_{\ell}$ to a beta distribution with parameters $(2x_2 + x_1 + \lambda_{\ell})$ and $(2x_0 + x_1 + \lambda_{\ell})$ where $x_j = \sum_{i:z=0}^{N} \delta(y_{i\ell} = j)$. 
+Only non-contaminated genotypes are used to calculate allele frequencies.  Therefore, only non-contaminated samples are relevant for the full condition distribution of $\theta_{\ell}$.  The likelihood of $y_{i\ell}$ given $\theta_{\ell}$ and non-contamination, $P(y_{i\ell}|\theta_{\ell},noncontam)$, is calculated assuming that the population is in Hardy-Weinberge Equilibrium. Evaluating $P(y_{i\ell}|\theta_{\ell},noncontam)$ and substituting the prior beta distribution of $\theta_{\ell}$ into Equation~\ref{theta_fc} symplifies the full conditional distribution of $\theta_{\ell}$ to a beta distribution with parameters $(2x_2 + x_1 + \lambda_{\ell})$ and $(2x_0 + x_1 + \lambda_{\ell})$ where $x_j = \sum_{i:z=0}^{N} \delta(y_{i\ell} = j)$. 
 
 \begin{eqnarray} \label{theta_simpfc}
 P(\theta_{\ell}|y_{i\ell},z_i) &\propto& [\prod_{i=\ell}^{N} P(y_{i\ell}|\theta_{\ell},z_i)]P(\theta_{\ell}|\lambda_{\ell}) \nonumber \\
@@ -115,24 +115,85 @@ P(\theta_{\ell}|y_{i\ell},z_i) &\propto& [\prod_{i=\ell}^{N} P(y_{i\ell}|\theta_
 
 
 \chapter{Multiple Source Populations Model}
-We next formulate a model for detecting contaminated samples from a collection in which the individuals, as well as contaminating DNA, originate from a mixture of population, calling this the Multiple Source Population (MSP) model.  As with the MSP model, the collection includes $N$ genetic samples, each one typed at $L$ SNPs, from $P$ populations.  Again, samples are assumed to not be in linkage disequilibrium (LD) in each population.  We used the same labels as in the SSP model to represent the alleles, allele frequencies, and genotypes and assumed the same probability distributions for $y_{i,\ell}$.  We again used $z_i$ as a contamination indiciator value and $\rho$ to denote the contamination rate.
+This chapter details the formulation of the Multiple Source Population (MSP) model, which can be used for detecting contaminated samples from a collection in which the individuals, as well as contaminating DNA, originate from a mixture of population.  As with the SSP model, the collection includes $N$ genetic samples, each one genotyped at $L$ SNPs, but these samples originate from $P$ populations.  Again, samples are assumed to not be in linkage disequilibrium (LD) in each population.  The same variables as in the SSP model represent the alleles, allele frequencies, and genotypes, and $y_{i,\ell}$ is assumed to have the same probability distribution.  Similarly, $z_i$ is used as a contamination indiciator value, and $\rho$ denotes the contamination rate.
 
-In the MSP model, associated with each sample $i$ is another unobserved indicator variable $u_i$ ($u_i\in\{1,\ldots,P\}$), which takes a single value that indicates the population of origin of a non-contaminated sample and takes two values that indicate the two populations of origin in a contaminated sample.  We let $\pi = (\pi_1,\ldots,\pi_P)$ denote the mixing proportion from the source of the samples. Given $\pi_k$, a sample in our collection originates from population $k$ with a probability of $\pi_k$.  In the MSP model, we assumed that the DNA that contaminates a sample is drawn randomly from the source, independtly between samples, meaning that individuals originating from populations with a higher $\pi$ value are assumed to have a higher probability of being the source of contamination. Our model also uses previously collected baseline data, $B$, to estimate the allele frequencies, $\theta = (\theta_1, \ldots, \theta_L)$, in each of the $P$ populatons.
+In the MSP model, associated with each sample $i$ is another unobserved indicator variable $u_i$ ($u_i\in\{1,\ldots,P\}$), which specifies the population of orgin for sample $i$.  If a sample is not contaminated, the variable $u_i$ takes a single value, and if a sample is contaminated, $u_i$ takes two values, representing the population of origin of each individual in the sample.  The unobserved variable $\pi = (\pi_1,\ldots,\pi_P)$ denotes the mixing proportion from the source of the samples. Given $\pi_k$, a sample in the collection originates from population $k$ with a probability of $\pi_k$.  In the MSP model, we assume that the DNA that contaminates a sample is drawn randomly from the source, independtly between samples, meaning that individuals originating from populations with a higher $\pi$ value are assumed to have a higher probability of being the source of contamination. The model also uses previously collected baseline data, $B$, to estimate the allele frequencies, $\theta = (\theta_1, \ldots, \theta_L)$, in each of the $P$ populatons.
 
-Our goal is to use the observed baseline data and the observed genotype data from each individual at all the loci to infer the mixing proportions, $\pi = (\pi_1, \ldots, \pi_P)$, population origin of the samples, $u_i = (u_1, \ldots, u_N)$, the contamination rate, $\rho$, and the contamination status of each individual, $z = (z_1, \ldots, z_N)$.  We placed the same prior distributions upon $\rho$ and $\theta$ as in the SSP model, and placed a Dirichlet distribution with parameters $\xi$ on $\pi$. In our experiments, we set the hyperparameters to the given unit-information priors:
-$\alpha=\beta=\lambda=0.5$ and
-$\xi= (\frac{1}{P}, \ldots, \frac{1}{P})$
-Figure~\ref{fig:dag2}
-shows the directed acyclic graph for the MSP model.  We again developed an MCMC algorithm relying on simple Gibbs-sample updates for all the unobserved variables, the details of which appear in Appendix%~\ref{app:ssp}.
+Figure~\ref{fig:dag2} shows the directed acyclic graph for the MSP model.  The goal of this model is to use the observed baseline data and the observed genotype data from each individual at all the loci to infer the mixing proportions, $\pi = (\pi_1, \ldots, \pi_P)$, population origin of the samples, $u_i = (u_1, \ldots, u_N)$, the contamination rate, $\rho$, and the contamination status of each individual, $z = (z_1, \ldots, z_N)$.  The same prior distributions were placed upon $\rho$ and $\theta$ as in the SSP model, and Dirichlet distributions were placed on parameters $\xi$ on $\pi$. Again, inference was performed using an MCMC algorithm relying on simple Gibbs-sample updates for all the unobserved variables.
 
 %%%% The DAG_2 figure
 \begin{figure}[h]
 \begin{center}
-\includegraphics[width=\columnwidth]{./images/DAG_2.pdf}
+\includegraphics[width=3.5 in]{./images/DAG_2.pdf}
 \end{center}
 \caption[Directed acyclic graph (DAG) representing the MSP model.]{Directed acyclic graph (DAG) representing the MSP model. Black nodes are observed, gray ones are parameters of prior distributions, and unfilled nodes are unobserved variables that are the goal of inference.}
 \label{fig:dag2}
 \end{figure}
+
+%Derivation of full conditionals
+To preform Gibbs sampling, the full conditional distributions of $\rho$, $\pi$, $u_i$, and $z_i$ were derived. The full conditional distribution of $\rho$ is given by Equation~\ref{rho_simpfc} and is the same distribution used in the SSP model.  The formula for the full conditional of $z_i$ is given Equation~\ref{z_fc2}.
+
+\begin{equation} \label{z_fc2}
+P(z_i|\theta_{\ell},y_i,\rho, B) = P(z_i|\rho)P(y_i|z_i,\theta,B)
+\end{equation}
+The likelihood $P(z_i|\rho)$ is the same as in the SSP model and is given by Equation~\ref{z_lh}. The full conditional distribution of $z_i$ is shown in Equation~\ref{z_simpfc2}. 
+
+\begin{eqnarray} \label{z_simpfc2}
+P(z_i=0|\theta_{\ell},y_i,\rho,B) &=& \frac{(1-\rho)^{1-z_i}\sum_{k=1}^{P} \prod_{\ell=1}^{L} P(y_{\ell}|\theta_{\ell,k},noncontam,B)}{R} \nonumber \\
+P(z_i=1|\theta_{\ell},y_i,\rho,B) &=& \frac{\rho^{z_i}\sum_{k=1}^{P} \sum_{j=1}^{P} \prod_{\ell=1}^{L} P(y_{\ell,}|\theta_{\ell,k},\theta_{\ell,j},contam,B)}{R} \nonumber \\
+R &=& P(z_i=0|\theta_{\ell},y_i,\rho,B) + P(z_i=1|\theta_{\ell},y_i,\rho,B)
+\end{eqnarray}
+
+Calculating the likelihood of $y_i$ is more involved than in the SSP model.  A Polya's Urn model was used to model $P(y_i|z_i,\theta,B)$ with a beta binomial distribution.  The distribution when $z_i = 0$ is given by Equation~\ref{clean_bb}.  The variable $n_{\ell,k}$ is the number of samples at the $\ell^{th}$ locus in the $k^{th}$ population and $x_j = \sum_{i}^{N} \delta(y_{i,\ell} = j)$.
+
+\begin{eqnarray} \label{clean_bb}
+P(y_{\ell} = 0|clean, \theta_{\ell},B) &=& \frac{(x_0 + 1 + \lambda)(x_0 + \lambda)}{(2n_{\ell,k} + 1)(2n_{\ell,k} + 2)} \nonumber \\
+P(y_{\ell} = 2|clean, \theta_{\ell},B) &=& \frac{(x_1 + 1 + \lambda)(x_1 + \lambda)}{(2n_{\ell,k} + 1)(2n_{\ell,k} + 2)} \nonumber \\
+P(y_{\ell} = 1|clean, \theta_{\ell},B) &=& 2 \times \frac{(x_0 + \lambda)(x_1 + \lambda)}{(2n_{\ell,k} + 1)(2n_{\ell,k} + 2)}
+\end{eqnarray}
+
+Equation~\ref{contam_bb} displays the probability distribution when $z_i = 1$.  There are two separate distributions for if the contamination occurs within the same population or between two different populations. 
+\begin{eqnarray} \label{contam_bb}
+P(y_{\ell} = 0|contam, \theta_{\ell},B, k=j) &=& \frac{(x_0 + 1 + \lambda)(x_0 + \lambda)(x_0 + 2 + \lambda)(x_0 + 3 + \lambda)}{(2n_{\ell} + 1)(2n_{\ell} + 2)(2n_{\ell} + 3)(2n_{\ell} + 4)} \nonumber \\
+P(y_{\ell} = 0|contam, \theta_{\ell},B, k \neq j) &=& \frac{(x_0 + 1 + \lambda)(x_0 + \lambda)}{(2n_{\ell} + 1)(2n_{\ell,k} + 2)} \times \frac{(x_0 + 1 + \lambda)(x_0 + \lambda)}{(2n_{\ell,j} + 1)(2n_{\ell,j} + 2)} \nonumber \\
+P(y_{\ell} = 2|contam, \theta_{\ell},B,k=j) &=& \frac{(x_1 + 1 + \lambda)(x_1 + \lambda)(x_1 + 2 + \lambda)(x_1 + 3 + \lambda)}{(2n_{\ell} + 1)(2n_{\ell} + 2)(2n_{\ell} + 3)(2n_{\ell} + 4)} \nonumber \\
+P(y_{\ell} = 2|contam, \theta_{\ell},B, k \neq j) &=& \frac{(x_1 + 1 + \lambda)(x_1 + \lambda)}{(2n_{\ell,k} + 1)(2n_{\ell,k} + 2)} \times \frac{(x_1 + 1 + \lambda)(x_1 + \lambda)}{(2n_{\ell,j} + 1)(2n_{\ell,j} + 2)} \nonumber \\
+P(y_{\ell} = 1|contam, \theta_{\ell},B) &=& 1 - P(y_{\ell} = 0|contam, \theta_{\ell}, B) - P(y_{\ell} = 2|contam, \theta_{\ell},B)
+\end{eqnarray}
+
+The full conditional probablity of $\pi$ was given by Equation~\ref{pi_fc}.  Only non-contaminated samples were used to update the value of $\pi$.  
+
+\begin{equation} \label{pi_fc}
+P(\pi|\xi,u) = P(\pi|\xi)P(u|\pi)
+\end{equation}
+
+$P(\pi|\xi)$ is represented by a Dirichlet distribution with $\xi = (\frac{1}{P},\ldots,\frac{1}{P})$ and $P(u|\pi)$ by a multinomial distribution shown in Equation~\ref{multi_u}.  After substitution, the full conditional distribution of $\pi$ is given by Equation~\ref{pi_simpfc}, which is a Dirichlet distribution with parameters $(w_1 + \frac{1}{P}, \ldots, w_P + \frac{1}{P})$ where $w_j = \sum_{i}^{N} \delta(u_{i} = j)$.
+
+\begin{equation} \label{multi_u}
+P(u|\pi) = \frac{P!}{\prod_{i=1}^{P} w_i!} \prod_{i=1}^{P} \pi_i^{w_i}
+\end{equation}
+
+\begin{eqnarray} \label{pi_simpfc}
+P(\pi|\xi,u) &\propto& \prod_{i=1}^{P} \pi_i^{\xi-1} \times \frac{P!}{\prod_{i=1}^{P} w_i!} \prod_{i=1}^{P} \pi_i^{w_i} \nonumber \\
+&\propto& \prod_{i=1}^{P} \pi_i^{\xi-1} \times \prod_{i=1}^{P} \pi_i^{w_i} \nonumber \\
+&=& \prod_{i=1}^{P} \pi_i^{\xi + w_i - 1}
+\end{eqnarray}
+
+The full conditional for $u_i$ is given by Equaiton~\ref{u_fc}. There are two separate distributions for non-contaminatd and contaminated samples.  If a sample is not contaminated, the likelihood that $u_i$ is equal to a specific population $k$ is given by $P(u_i = k|\pi) = \pi_k$, and the likelihood of $y_i$ is given by Equation~\ref{clean_bb}.  Therefore, the full conditional distribution of $u_i$ for a non-contaminated sample is given by Equation~\ref{u_simpfc}.
+
+\begin{equation} \label{u_fc}
+P(u_i|\pi,y_i,\theta,z_i) = P(u_i|\pi)P(y_i|u_i,\theta,z_i,B)
+\end{equation}
+
+\begin{equation} \label{u_simpfc}
+P(u_i = k|\pi,z_i=0,y_i,\theta,B) = \frac{\pi_k \times \prod_{\ell=1}^{L} p(y_{\ell}|\theta_{k,\ell},B,nocontam)}{\sum_{k=1}^{P} \pi_k \times \prod_{\ell=1}^{L} P(y_{\ell}|\theta_{k,\ell},B,nocontam)}
+\end{equation}
+
+If the sample is contaminated, the likelihood that $u_i$ is equal to ($k$, $j$) is given by $P(u_i = k,j|\pi) = \pi_k \pi_j$.  Order matters in this derivations, so $u_i=k,j$ is different than $u_i=j,k$.  The $P(y_i|u_i,\theta,z_i,B)$ in this scenario is given Equation~\ref{contam_bb}.  Therefore the full conditional distribution of $u_i$ for a contaminated sample is:
+
+\begin{equation} \label{u_simpfc2}
+P(u_i = k,j|\pi,z_i=1,y_i,\theta,B) = \frac{\pi_k \pi_j \times \prod_{\ell=1}^{L} p(y_{\ell}|\theta_{k,\ell},\theta_{j,\ell},B,nocontam)}{\sum_{j=1}^P \sum_{k=1}^{P} \pi_k \pi_j \times \prod_{\ell=1}^{L} P(y_{\ell}|\theta_{k,\ell}, \theta_{j,\ell}, B,nocontam)}
+\end{equation}
 
 \chapter{Test Simulations}
 We tested our SSP model using \emph{in silico} data generated under the Hardy-Weinberg.  Each simulation had four parameters: $n$, the number of samples; $\rho$, the contamination proportion; $L$, the number of loci in each sample; and $\boldsymbol{\theta}$, the allele frequence at each locus $1$ through $L$. For each simulation, $n=200$, meaning that we created 200 samples. We randomly drew $L$ allele frequencies with replacement from the Feather River Hatchery Spring run Chinook salmon population to create $\boldsymbol{\theta}$ for each simulation (cite paper).  We then created the \emph{in silico} genotypes by sampling the genotype of each locus of each individual using  
@@ -176,3 +237,4 @@ samples inferred to have posterior probability $>0.5$ of being contaminated, [\i
 \hrule
 \end{table}
 
+\chapter{Conclusion}
