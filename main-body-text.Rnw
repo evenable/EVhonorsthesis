@@ -250,13 +250,18 @@ samples inferred to be contaminated with a posterior probability $>0.5$ of being
 
 \FloatBarrier
 \section{MSP Simulation Results}
+The results of the test simulations proved that the MSP is also able to identify contaminated samples and estimate the contamination proprotion, $\rho$.  Like Figure~\ref{rho_allele_SSP}, the boxplots in Figure~\ref{MSP_boxplots} depict the distribution of the posterior mean of $\rho$, but in this case for each of five contamination proportion values and 20 different mixing proportions sets.  As with the box plots of the SSP model, those of the MSP model are clustered along a line, representing the true values of the contamination proportion.  For all the mixing proportion sets and contamination proportions, the posterior means are very close to the true $\rho$ value.  In addtion, there are very few outliers and very little spread in the distribution, illustrating the model accurately and precisely estimates the contamination proportion of a collection of samples.
+
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=\columnwidth]{./images/mixed_rho}
 \end{center}
 \caption[Posterior Mean Estimates of contamination proportion MSP Model]{Boxplots showing the distribution of posterior mean estimates of $\rho$ under varying true values of the fraction of contaminated samples  (listed along the top edge of edge panel) and the different fishery proportions (the identity of which are not revelant and not listed on the $x$-axis). Each boxplot summarizes 20 estimates.}
+\label{MSP_boxplots}
 \end{figure}
+
+Overall, the MSP model accurately identified the majority of the contaminated samples, using a posterior probability $>0.5$ (\ie $P(z_i=1|\mathbf{y})>0.5$) as the criteria for contamination identification.  For all simulations run with each of the 20 mixing proportions, the model correctly at least 98 percent of the contaminated samples, while falsely identifying less than 0.3 percent of clean samples as contaminated (see Table~\ref{ztable_MSP}).  No non-contaminated samples were falsely identified as contaminated when the contamination proportion was 0 or 0.025; however, in most simulation senarios with larger $\rho$ values (\ie $\rho = (0.075, 0.2, 0.5)$), there where a few false positives.  There seems to be little difference in the true positive rates between the scenarios run with different contamination proportions.
 
 \begin{table}[h]
 \caption[True positive and false positive rates of contamination identification of MSP Model]{True positive and false positive rates.  {\em (a)}~Across all simulated 
@@ -267,6 +272,7 @@ samples inferred to have posterior probability $>0.5$ of being contaminated, [\i
 \mbox{}\\
 \input{tables/mixed_z_table}
 \hrule
+\label{ztable_MSP}
 \end{table}
 
 \chapter{Conclusion}
