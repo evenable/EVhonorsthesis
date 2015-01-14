@@ -12,9 +12,13 @@ This paper presents a simple Bayesian model that uses Markov Chain Monte Carlo (
 
 \chapter{Background}
 \section{Baysian Inference}
-Bayesian inference combines new evidence with prior knowledge to determine the sequence of events that most likely led to a given outcome.  In Bayesian inference, updating prior beliefs using newly aquired evidence is done using Bayes' rule, which is given by Equation ~ref{bayes}.  The variable $\theta$ represents an unknown, like the allele frequencies at a set of loci, and the variable $y$ is the known paramenter.  Baye's 
+Bayesian inference combines new evidence with prior knowledge to determine the sequence of events that most likely led to a given outcome.  Equation~ref{bayes} gives the formula for Bayes' rule.  In Bayesian inference, Bayes' rule is used to update prior beliefs and acquire a new \emph{posterior distribution}, $p(\theta|y)$.  The variable $\theta$ represents an unknown, like the allele frequencies at a set of loci, and the variable $y$ is the known paramenter, like an individuals genotype.
 
+\begin{equation} \label{bayes}
+p(\theta|y) = \frac{p(y|\theta)p(\theta)}{p(y)}
+\end{equation}
 
+The prior knowledge is expressed in Bayes' rule by $p(y)$, which is known as the \emph{prior distribution}.  New information gained from the known parameter $y$ is incorporated into Bayes' rule with $p(y|\theta)$. $p(y|\theta)$, which is known as the \emph{likelihood}, is a function of $\theta$.  The denominator of Bayes' rule is given by $p(y) = \int p(y|\theta) p(\theta) d\theta$.  Equation~ref{bayes} is not always easily solved, but algorithms, like MCMC methods, can be used to perform inference using Bayes' rule.
 
 \section{Markov Chain Monte Carlo (MCMC)}
 \section{Gibbs Sampling}
