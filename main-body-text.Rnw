@@ -21,6 +21,24 @@ p(\theta|y) = \frac{p(y|\theta)p(\theta)}{p(y)}
 The prior knowledge is expressed in Bayes' rule by $p(y)$, which is known as the \emph{prior distribution}.  New information gained from the known parameter $y$ is incorporated into Bayes' rule with $p(y|\theta)$. $p(y|\theta)$, which is known as the \emph{likelihood}, is a function of $\theta$.  The denominator of Bayes' rule is given by $p(y) = \int p(y|\theta) p(\theta) d\theta$.  Equation~ref{bayes} is not always easily solved, but algorithms, like MCMC methods, can be used to perform inference using Bayes' rule.
 
 \section{Markov Chain Monte Carlo (MCMC)}
+Markov chain Monte Carlo methods are algorithms that sample from probability distribution that follows the stochastic prosses of a Markov chain.  The equilibrium of this probability distribution is the desired true posterior distribution, and MCMC methods can therefore be used to estimate values from the true distribution.
+First, a Monte Carlo method approximates an expectation using the mean of a sample of random variables.  It relies on the weak law of large numbers, which is given by Equation~ref{wlln} where $X_1, X_2, \ldots, X_n$ are random variables with $\mathbb{E}[X_i] < \infty$ and $\bar{X_n}=\frac{1}{n}\sum_{i=1}^{n}X_1$.
+\begin{equation} \label{wlln}
+\lim_{n \to \infty} P(|\bar{X_n}-\mathbb{E}[X_i]|>\epsilon) = 0
+\end{equation}
+
+The weak law of large numbers leads to the conclusion taht an expectation can be approximated by the sample mean of $n$ random variables (Equation~ref{expectation}).
+\begin{equation} \label{expectation}
+\mathbb{E}[g(X)] \approx \frac{1}{n} \sum_{i=1}^{n} g(x^{(i)})
+\end{equation}
+
+In an MCMC algorithm, $x^{(i)}$ are the states visited by a Markov chain.  Markov chains are defined by Equation~ref{markov} and depicted schematically by Figure~ref{markovchain} where $X_t$ is a sequence of random variables for $t=0,1,2,\ldots$.
+\begin{equation} \label{markov}
+P(X_i|X_{t-1},X_{t-2},\ldots, X_0) = P(X_t|X_{t-1})  \forall t
+\end{equation}
+
+In order for an MCMC to approximate the correct values, a Markov chain must have the correct limiting distribution and it must be \emph{ergodic}.  A Markov chain is \emph{ergodic} if it has a \emph{limiting distribution} $\pi$.  A Markov chain will be ergodic if it has no transient states, if it is aperiodic, and if it is irreducible.  The MCMC algorithms in this paper use Gibbs Sampling to ensure that these properties are satisfied.
+
 \section{Gibbs Sampling}
 
 %Section on the SSP Model
