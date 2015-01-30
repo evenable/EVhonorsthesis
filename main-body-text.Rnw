@@ -82,18 +82,13 @@ The unobserved variable $\rho$ denotes the contamination rate in the collection.
 the collection is contaminated, independently, with probability $\rho$.  We assume that the DNA 
 that contaminates a sample is drawn randomly from the population, independently between samples.  
 
-
-Figure~\ref{fig:dag1} shows the directed acyclic graph (DAG) for the SSP model. As seen in the DAG, the goal of the model is to use the observed genotype data from each individual at all the loci to infer the allele 
-frequencies in the population, $\theta = (\theta_1,\ldots,\theta_L)$, the contamination rate, $\rho$, and 
-the contamination status of each individual, $z = (z_1,\ldots,z_N)$.  To perform 
-Bayesian inference, prior distributions are placed on $\rho$ and $\theta$.  The 
-prior for $\rho$ is a beta distribution with parameters $\alpha$ and $\beta$, and the prior for each $
-\theta_\ell$ is independently a beta distribution with both parameters equal to $\lambda$. Inference was performed using an MCMC algorithm relying on Gibbs-sample updates for all the unobserved variables.\\
+Figure~\ref{fig:dag1} shows the directed acyclic graph (DAG) for the SSP model. As seen in the DAG, the goal of the model is to use the observed genotype data from each individual at all the loci to infer the allele frequencies in the population, $\theta = (\theta_1,\ldots,\theta_L)$, the contamination rate, $\rho$, and the contamination status of each individual, $z = (z_1,\ldots,z_N)$.  To perform Bayesian inference, prior distributions are placed on $\rho$ and $\theta$.  The 
+prior for $\rho$ is a beta distribution with parameters $\alpha$ and $\beta$, and the prior for each $\theta_\ell$ is independently a beta distribution with both parameters equal to $\lambda$. Inference was performed using an MCMC algorithm relying on Gibbs-sample updates for all the unobserved variables.
 
 %%%% The DAG figure
 \begin{figure}[h]
 \begin{center}
-\includegraphics[width=3.5in]{./images/DAG_1.pdf}
+\includegraphics[width=3.25in]{./images/DAG_1.pdf}
 \end{center}
 \caption[Directed acyclic graph (DAG) representing the SSP model.]{Directed acyclic graph (DAG) representing the SSP model. Black nodes are observed, gray ones are parameters of prior distributions, and unfilled nodes are unobserved variables that are the goal of inference.}
 \label{fig:dag1}
@@ -109,7 +104,6 @@ $P(z_i|\rho)$ is the likelihood of the $z_i$ value given $\rho$, and $P(y_i|z_i,
 \begin{equation} \label{z_lh}
 P(z_i|\rho) = \rho^{z_i}(1-\rho)^{1-z_i} 
 \end{equation}
-
 
 \begin{equation} \label{y_lh}
 P(y_i|z_i=0,\theta) = \prod_{\ell=1}^{L} P(y_{\ell}|\theta_{\ell},noncontam)
