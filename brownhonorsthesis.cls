@@ -279,12 +279,12 @@ University PhD Thesis Class]
   \vspace{.75in}
   \let\old@stretch\baselinestretch \single@spacing\selectfont
   \make@sigline{\@principaladviser}{\@empty}\\[.4in]
-  \centerline{Recommended to the Graduate Council}\\[.75in]
+  \centerline{Recommended to the Committee}\\[.75in]
   \make@sigline{\reader@one}{\@firstreaderfrom}\\[.40in]
   \make@sigline{\reader@two}{\@secondreaderfrom}
   \ifnum\@readers>3 \\[.40in]\make@sigline{\reader@three}{\@thirdreaderfrom}\fi
-  \\[.5in]\centerline{Approved by the Graduate Council}\\[.75in]
-  \make@sigline{\@dean}{Dean of the Graduate School}
+  \\[.5in]\centerline{Approved by the Committee}\\[.75in]
+  \make@sigline{\@dean}{Position}
   \def\baselinestretch{\old@stretch}\selectfont
   \clearpage\thispagestyle{empty}\setcounter{page}{2}\cleardoublepage
   \setcounter{page}{4}
@@ -299,7 +299,7 @@ University PhD Thesis Class]
 \def\abstractpage{%
   \thispagestyle{empty}
   \noindent Abstract of ``\@title''
-  by \@author, Ph.D., Brown University, \@submitdate.\\[.5in]
+  by \@author, Brown University, \@submitdate.\\[.5in]
   \d@abstract\vfill\newpage}
 
 \def\beforepreface{\pagestyle{empty}\pagenumbering{roman}
