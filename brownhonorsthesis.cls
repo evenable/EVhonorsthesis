@@ -185,9 +185,9 @@ University PhD Thesis Class]
 % front matter defining macros
 \def\dept#1{\gdef\@dept{#1}}
 \def\degrees#1{\gdef\@degrees{#1}}
-\def\principaladviser#1{\gdef\@principaladviser{#1, Director}}
+\def\principaladviser#1{\gdef\@principaladviser{#1, Advisor}}
 \def\advis@r{Adviser}
-\def\principaladvisor#1{\gdef\@principaladviser{#1, Director}%
+\def\principaladvisor#1{\gdef\@principaladviser{#1, Advisor}%
   \gdef\advis@r{Advisor}}
 \def\dean#1{\gdef\@dean{#1}}
 \def\submitdate#1{\gdef\@submitdate{#1}}
@@ -225,8 +225,8 @@ University PhD Thesis Class]
 \let\@secondreaderfrom\@empty
 \let\@thirdreaderfrom\@empty
 \newcommand*{\reader}[2][\@empty]{\ifcase\the\@readers\or
-  \gdef\@firstreaderfrom{#1}  \gdef\reader@one{#2, Reader}\or
-  \gdef\@secondreaderfrom{#1} \gdef\reader@two{#2, Reader}\or
+  \gdef\@firstreaderfrom{#1}  \gdef\reader@one{#2, Advisor/First Reader}\or
+  \gdef\@secondreaderfrom{#1} \gdef\reader@two{#2, Second Reader}\or
   \gdef\@thirdreaderfrom{#1}  \gdef\reader@three{#2, Reader}\or
   \@latex@error{Too many readers supplied (max 3)\@ehc}\fi
   \ifnum\@readers < 4 \global\advance\@readers\@ne\fi}
@@ -243,7 +243,7 @@ University PhD Thesis Class]
   \vfill
   \begin{center}%
     An honors thesis submitted in partial fulfillment of the\\
-    requirements for the Degree of Bachelor's of Science, With Honors\\
+    requirements for the Degree of Bachelor of Science, With Honors\\
     in the Department of \@dept{} at Brown University%
   \end{center}
   \vfill
@@ -284,7 +284,7 @@ University PhD Thesis Class]
   \make@sigline{\reader@two}{\@secondreaderfrom}
   \ifnum\@readers>3 \\[.40in]\make@sigline{\reader@three}{\@thirdreaderfrom}\fi
   \\[.5in]\centerline{Approved by the Committee}\\[.75in]
-  \make@sigline{\@dean}{Position}
+  \make@sigline{\@dean}{Chair of the Undergraduate Committee}
   \def\baselinestretch{\old@stretch}\selectfont
   \clearpage\thispagestyle{empty}\setcounter{page}{2}\cleardoublepage
   \setcounter{page}{4}
