@@ -229,7 +229,7 @@ The SSP model is also able to successfully estimate the allele frequencies of th
 
 %%% The allele frequency CI coverage table
 \begin{table}[h]
-\caption[Coverage of posterior credible intervals (CI) for allele frequencies in SSP model]{Coverage of posterior credible intervals (CI) for allele frequencies.  The values in the table represent the proportion of the true allele frequencies that fell within the 90\% posterior CI.}
+\caption[Coverage of posterior credible intervals (CI) for allele frequencies in the SSP model]{Coverage of posterior credible intervals (CI) for allele frequencies.  The values in the table represent the proportion of the true allele frequencies that fell within the 90\% posterior CI.}
 \hrule \hrule
 \begin{center}
 \input{tables/afreq_ci_coverage}
@@ -243,14 +243,14 @@ The SSP model is also able to successfully estimate the allele frequencies of th
 \begin{center}
 \includegraphics[width=\columnwidth]{./images/rho_and_allele.pdf}
 \end{center}
-\caption[Posterior mean estimates of $\rho$ and $\theta_{\ell}$ for SSP model]{({\em a}) Boxplots showing the distribution of posterior mean estimates of $\rho$ under varying true values of the proportion of contaminated samples  (listed along the top panel) and number of loci (listed along the $x$-axis). Each boxplot summarizes 100 estimates. ({\em b}) Posterior mean estimates (on the $y$-axis) of allele frequencies, $\theta_\ell$,plotted against the true values (on the $x$-axis).  Only results from the 100 simulations with $L=20$ and $\rho=0.2$ are shown so that the individual points can be distinguished.}
+\caption[Posterior mean estimates of $\rho$ and $\theta_{\ell}$ using the SSP model]{({\em a}) Boxplots showing the distribution of posterior mean estimates of $\rho$ under varying true values of the proportion of contaminated samples  (listed along the top panel) and number of loci (listed along the $x$-axis). Each boxplot summarizes 100 estimates. ({\em b}) Posterior mean estimates (on the $y$-axis) of allele frequencies, $\theta_\ell$,plotted against the true values (on the $x$-axis).  Only results from the 100 simulations with $L=20$ and $\rho=0.2$ are shown so that the individual points can be distinguished.}
 \label{rho_allele_SSP}
 \end{figure}
 \FloatBarrier
 The ultimate goal of the SSP model is to identify the contaminated samples within the collection. Overall, the model accurately identified the majority of the contaminated samples, using a posterior probability $>0.5$ (\ie $P(z_i=1|\mathbf{y})>0.5$) as the criterion for contamination identification. For simulations run with 100 or greater loci, the model correctly identified nearly 100 percent of the contaminated samples, (see Table~\ref{ztable_SSP}({\em a})), while falsely identifying only six non-contaminated samples as contaminated in 1000 simulations (see Table~\ref{ztable_SSP}({\em a})).  Even with 60 loci, the model identified above 98 percent of the contaminated samples, while falsely labeling less than 0.4 percent of non-contaminated samples as contaminated for each parameter set.  With 20 loci, however, the model is less effective and lacks consistency. True positive rates ranged from 0.578 to 0.942 depending on the value of $\rho$, and false negative rates ranged from 0.001 to 0.061. \\
 %%% The false and true positive z_table
 \begin{table}[h]
-\caption[True positive and false positive rates of contamination identification for SSP model]{True positive and false positive rates for contamination identification across all simulated data sets with given values of $\rho$ and $L$.  {\em (a)}~The fraction of truly contaminated
+\caption[True positive and false positive rates of contamination identification for the SSP model]{True positive and false positive rates for contamination identification across all simulated data sets with given values of $\rho$ and $L$.  {\em (a)}~The fraction of truly contaminated
 samples inferred to be contaminated with a posterior probability $>0.5$ of being contaminated, [\ie $P(z_i=1|\mathbf{y})>0.5$].
 {\em (b)}~ The fraction of non-contaminated samples inferred to be contaminated with $P(z_i=1|\mathbf{y})>0.5$.}
 \hrule\hrule
@@ -269,14 +269,14 @@ The results of the test simulations proved that the MSP is also able to identify
 \begin{center}
 \includegraphics[width=.90\columnwidth]{./images/mixed_rho}
 \end{center}
-\caption[Posterior mean estimates of contamination proportion MSP Model]{Boxplots showing the distribution of posterior mean estimates of $\rho$ under varying true values of the fraction of contaminated samples  (listed along the top panel) and the different fishery proportions (the identity of which are not relevant and are not listed on the $x$-axis). Each boxplot summarizes 20 estimates.}
+\caption[Posterior mean estimates of $\rho$ using the MSP model]{Boxplots showing the distribution of posterior mean estimates of $\rho$ under varying true values of the fraction of contaminated samples  (listed along the top panel) and the different fishery proportions (the identity of which are not relevant and are not listed on the $x$-axis). Each boxplot summarizes 20 estimates.}
 \label{MSP_boxplots}
 \end{figure}
 
 The MSP model accurately identified the majority of contaminated samples using a posterior probability $>0.5$ (\ie $P(z_i=1|\mathbf{y})>0.5$) as the criterion for contamination identification.  For all 20 simulation parameters, the model correctly identified at least 98 percent of the contaminated samples, while falsely identifying less than 0.3 percent of non-contaminated samples (see Table~\ref{ztable_MSP}).  No non-contaminated samples were falsely identified as contaminated when the contamination proportion was 0 or 0.025; however, in most simulations with larger $\rho$ values (\ie $\rho = (0.075, 0.2, 0.5)$), there where a few false positives.  There is little difference between the true positive rates of scenarios with different contamination proportions parameters.
 
 \begin{table}[h]
-\caption[True positive and false positive rates of contamination identification for the MSP Model]{True positive and false positive rates.  {\em (a)}~Across all simulated 
+\caption[True positive and false positive rates of contamination identification for the MSP model]{True positive and false positive rates.  {\em (a)}~Across all simulated 
 data sets with given values of $\rho$ and fishery proportions, the fraction of truly contaminated
 samples inferred to have posterior probability $>0.5$ of being contaminated, [\ie $P(z_i=1|\mathbf{y})>0.5$].
 {\em (b)}~Fraction of non-contaminated samples with $P(z_i=1|\mathbf{y})>0.5$.}
